@@ -1,0 +1,52 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # Transaction service logs
+  - job_name: transaction-service
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: transaction-service
+        __path__: /logs/transaction-service/*.log
+    pipeline_stages:
+      - regex:
+          expression: '(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[(?P<thread>[^\]]+)\] (?P<level>\w+) (?P<logger>[\w\.{}-]+) - traceId=(?P<trace_id>[\w-]*) spanId=(?P<span_id>[\w-]*) - (?P<message>.*)'
+      - labels:
+          level:
+          logger:
+          thread:
+          trace_id:
+          span_id:
+      - timestamp:
+          source: timestamp
+          format: '2006-01-02 15:04:05.000'
+
+  # Balances service logs
+  - job_name: balances-service
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: balances-service
+        __path__: /logs/balances-service/*.log
+    pipeline_stages:
+      - regex:
+          expression: '(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[(?P<thread>[^\]]+)\] (?P<level>\w+) (?P<logger>[\w\.{}-]+) - traceId=(?P<trace_id>[\w-]*) spanId=(?P<span_id>[\w-]*) - (?P<message>.*)'
+      - labels:
+          level:
+          logger:
+          thread:
+          trace_id:
+          span_id:
+      - timestamp:
+          source: timestamp
+          format: '2006-01-02 15:04:05.000'
