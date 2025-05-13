@@ -47,7 +47,7 @@ public class TransactionServiceImpl implements TransactionService {
             AccountBalance accountBalance = checkAccountBalance(request.getAccountId());
             
             // Verify sufficient funds
-            if (accountBalance.getAvailableBalance().compareTo(request.getAmount()) < 0) {
+            if (accountBalance!=null && accountBalance.getAvailableBalance()!=null && accountBalance.getAvailableBalance().compareTo(request.getAmount()) < 0) {
                 // Create a failed transaction due to insufficient funds
                 Transaction failedTransaction = Transaction.builder()
                         .id(UUID.randomUUID().toString())
