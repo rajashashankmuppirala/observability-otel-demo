@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Properties>
-        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} trace_id=%X{trace_id} span_id=%X{span_id} trace_flags=%X{trace_flags} %msg%n</Property>
-        <Property name="APP_LOG_ROOT">./../logs/transaction-service</Property>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Property>
+        <Property name="APP_LOG_ROOT">./logs/transaction-service</Property>
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
@@ -10,7 +10,9 @@
         </Console>
         <RollingFile name="FileAppender" fileName="${APP_LOG_ROOT}/application.log"
                      filePattern="${APP_LOG_ROOT}/application-%d{yyyy-MM-dd}-%i.log">
-            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <JsonLayout compact="true" eventEol="true" properties="true" stacktraceAsString="true">
+                <KeyValuePair key="service.name" value="transaction-service"/>
+            </JsonLayout>
             <Policies>
                 <SizeBasedTriggeringPolicy size="10MB" />
                 <TimeBasedTriggeringPolicy interval="1" />

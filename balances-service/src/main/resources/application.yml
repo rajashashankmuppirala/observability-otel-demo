@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: balances-service
+server:
+  port: 8081
+
+
+# OpenTelemetry configuration
+otel:
+  resource:
+    attributes:
+      service.name: ${spring.application.name}
+
+  sdk:
+    enabled: true
+    exporter:
+      otlp:
+        #protocol: grpc
+        #endpoint: http://localhost:4317
+        protocol: http
+        endpoint: http://localhost:4318
+    trace:
+      debug: true  # Enable SDK trace debugging
+logging:
+  level:
+    io.opentelemetry: DEBUG
+    io.opentelemetry.exporter.otlp: DEBUG
+    io.micrometer.tracing: DEBUG
