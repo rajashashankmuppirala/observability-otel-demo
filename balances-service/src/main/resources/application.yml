@@ -9,8 +9,15 @@ server:
 otel:
   resource:
     attributes:
-      service.name: ${spring.application.name}
+      service:
+        name: ${spring.application.name}
+        version: 1.0.0
+      deployment:
+        environment: development
 
+  instrumentation:
+    micrometer:
+      enabled: true
   sdk:
     enabled: true
     exporter:
@@ -21,6 +28,10 @@ otel:
         endpoint: http://localhost:4318
     trace:
       debug: true  # Enable SDK trace debugging
+  traces:
+    exporter: otlp
+  metrics:
+    exporter: otlp
 logging:
   level:
     io.opentelemetry: DEBUG
